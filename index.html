@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUROMACH BEST 50 FAST SORTER</title>
+<style>
+  :root {
+    --bg-dark: #090a0f;
+    --card-bg: #131622;
+    --accent-red: #ff0055;
+    --accent-orange: #ff7700;
+    --accent-yellow: #ffcc00;
+    --accent-blue: #00d2ff;
+    --accent-green: #00e676;
+    --text-main: #ffffff;
+    --text-muted: #8e95aa;
+    --border-color: #24283b;
+    --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    width: 100%;
+    padding: 20px 16px;
+    background: linear-gradient(135deg, #2b0014, #0f172a, #1a0022);
+    border-bottom: 2px solid var(--accent-red);
+    text-align: center;
+    position: relative;
+  }
+
+  header h1 {
+    font-size: clamp(1.3rem, 4vw, 2.1rem);
+    font-weight: 900;
+    font-style: italic;
+    background: linear-gradient(90deg, #ff0055, #ffaa00, #00d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+
+  .save-status-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .save-pill {
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--accent-green);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 920px;
+    padding: 16px 16px 80px 16px;
+  }
+
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
+  /* --- RESUME BANNER --- */
+  .resume-banner {
+    background: linear-gradient(90deg, #1f2742, #161b2e);
+    border: 1px solid var(--accent-blue);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.15);
+  }
+
+  .resume-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* --- SELECTION VIEW --- */
+  .selection-controls {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .mode-selector {
+    background: #0d101a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  .mode-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .mode-label {
+    flex: 1;
+    min-width: 200px;
+    background: #171b2b;
+    border: 1px solid var(--border-color);
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .mode-label input { margin-top: 3px; accent-color: var(--accent-orange); }
+
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .btn-sm {
+    background: #202538;
+    color: #cbd5e1;
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .btn-sm:hover { background: var(--accent-red); color: #fff; }
+
+  .album-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .album-pill {
+    background: #171b2b;
+    border: 1px solid var(--border-color);
+    color: #cbd5e1;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .album-pill input { accent-color: var(--accent-orange); }
+
+  .search-input {
+    width: 100%;
+    background: #0d101a;
+    border: 1px solid var(--border-color);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .album-block {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .album-block-header {
+    background: #191e30;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .album-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  .song-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 6px;
+    padding: 10px;
+  }
+  .song-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #0d101a;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .song-item:hover { background: #191f33; }
+  .song-item-info { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .song-item-title { font-weight: bold; color: #fff; text-overflow: ellipsis; overflow: hidden; }
+  .song-item-artist { font-size: 0.75rem; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; }
+
+  .sticky-bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(9, 10, 15, 0.94);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border-color);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 920px;
+    margin: 0 auto;
+    z-index: 100;
+  }
+  .selected-count-badge strong { color: var(--accent-yellow); font-size: 1.2rem; }
+
+  .btn-start {
+    background: linear-gradient(90deg, var(--accent-red), var(--accent-orange));
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+  }
+  .btn-start:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* --- BATTLE VIEW --- */
+  .battle-header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .phase-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .phase-qualifier { background: rgba(0, 210, 255, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+  .phase-final { background: rgba(255, 0, 85, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+  .progress-container {
+    width: 100%;
+    background: #171b2b;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow));
+    transition: width 0.2s;
+  }
+  .battle-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .match-arena {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 20px 0;
+  }
+  @media (max-width: 650px) {
+    .match-arena { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  .song-card {
+    background: linear-gradient(180deg, #171b2c, #101320);
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .song-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-orange);
+    box-shadow: 0 6px 20px rgba(255, 119, 0, 0.25);
+  }
+  .card-album-tag {
+    font-size: 0.75rem;
+    color: var(--accent-blue);
+    background: rgba(0, 210, 255, 0.1);
+    padding: 3px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    align-self: center;
+    margin-bottom: 8px;
+  }
+  .card-title { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .card-artist { font-size: 0.9rem; color: var(--accent-yellow); margin-bottom: 16px; }
+  .btn-choose {
+    background: #20273f;
+    color: #fff;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    width: 100%;
+  }
+  .song-card:hover .btn-choose { background: var(--accent-red); border-color: var(--accent-red); }
+
+  .vs-badge {
+    background: #1a2035;
+    color: var(--accent-red);
+    font-weight: 900;
+    font-style: italic;
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--border-color);
+    margin: 0 auto;
+  }
+
+  .battle-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn-action {
+    background: #171b2b;
+    color: #cbd5e1;
+    border: 1px solid var(--border-color);
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .btn-action:hover:not(:disabled) { background: #262e49; color: #fff; }
+  .btn-action:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-finalize {
+    background: rgba(255, 204, 0, 0.1);
+    border-color: var(--accent-yellow);
+    color: var(--accent-yellow);
+    font-weight: bold;
+  }
+  .btn-finalize:hover { background: var(--accent-yellow); color: #000; }
+
+  /* --- RESULT VIEW --- */
+  .result-header { text-align: center; margin-bottom: 20px; }
+  .result-header h2 { font-size: 1.8rem; color: var(--accent-yellow); font-weight: 900; }
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+  }
+  .ranking-table th {
+    background: #191e30;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .ranking-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+  }
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 0.9rem;
+  }
+  .rank-1 { background: #ffd700; color: #000; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+  .rank-2 { background: #c0c0c0; color: #000; }
+  .rank-3 { background: #cd7f32; color: #fff; }
+  .rank-other { background: #22273d; color: #a0aec0; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-blue);
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SUPER EUROBEAT presents EUROMACH</h1>
+  <p style="color:var(--text-muted); font-size:0.85rem;">★ FAST BEST 50 SONG SORTER ★</p>
+  <div class="save-status-bar">
+    <span class="save-pill" id="auto-save-pill">自動保存: 有効</span>
+    <span id="save-time-text">未保存</span>
+    <button type="button" class="btn-sm" id="btn-export-json" style="padding:2px 8px; font-size:0.75rem;">進捗出力</button>
+    <button type="button" class="btn-sm" id="btn-import-json-trigger" style="padding:2px 8px; font-size:0.75rem;">進捗読込</button>
+    <input type="file" id="import-file-input" style="display:none;" accept=".json">
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- RESUME NOTIFICATION -->
+  <div id="resume-banner" class="resume-banner" style="display:none;">
+    <div>
+      <strong style="color:var(--accent-yellow);">前回の途中データが見つかりました！</strong>
+      <div id="resume-info" style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;"></div>
+    </div>
+    <div class="resume-actions">
+      <button type="button" class="btn-start" id="btn-resume" style="padding:6px 16px; font-size:0.85rem;">続きから再開</button>
+      <button type="button" class="btn-sm" id="btn-discard-save">破棄する</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: CANDIDATE SELECTION -->
+  <div id="selection-view" class="view-panel active">
+    <div class="selection-controls">
+      <!-- FAST MODE SELECTOR -->
+      <div class="mode-selector">
+        <strong style="font-size:0.9rem; color:var(--accent-yellow);">⚡ 高速化モード設定（下位の早期足切り方式）</strong>
+        <div class="mode-options">
+          <label class="mode-label">
+            <input type="radio" name="sortMode" value="fast" checked>
+            <div>
+              <strong>超高速モード（1敗で脱落）</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">目安: 約400〜500対戦。下位曲を素早く排除し最短でベスト50を決定。</div>
+            </div>
+          </label>
+          <label class="mode-label">
+            <input type="radio" name="sortMode" value="standard">
+            <div>
+              <strong>安定モード（2敗で脱落 / 敗者復活あり）</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">目安: 約600〜750対戦。1度負けても救済あり。より高精度。</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-header">
+        <h3 style="font-size:1rem; color:#fff;">アルバム・楽曲の絞り込み</h3>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn-sm" id="btn-select-all">全選択</button>
+          <button type="button" class="btn-sm" id="btn-deselect-all">全解除</button>
+        </div>
+      </div>
+
+      <div class="album-pills" id="album-pills-container"></div>
+      <input type="text" id="search-input" class="search-input" placeholder="曲名やアーティスト名で検索...">
+    </div>
+
+    <div id="album-list-container"></div>
+
+    <div class="sticky-bottom-bar">
+      <div class="selected-count-badge">
+        選択中: <strong id="selected-count">0</strong> / <span id="total-songs-count">0</span> 曲
+      </div>
+      <button type="button" id="btn-start-sort" class="btn-start" disabled>ソート開始！</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: BATTLE VIEW -->
+  <div id="battle-view" class="view-panel">
+    <div class="battle-header">
+      <div><span class="phase-badge" id="phase-badge">予選フェーズ</span></div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="battle-stats">
+        <span>対戦数: <strong id="battle-step" style="color:#fff;">0</strong></span>
+        <span id="phase-desc" style="color:var(--accent-yellow);">生存曲: 356 / 50</span>
+        <span>進捗目安: <strong id="progress-percent" style="color:#fff;">0%</strong></span>
+      </div>
+    </div>
+
+    <div class="match-arena">
+      <div class="song-card" id="card-left">
+        <div>
+          <span class="card-album-tag" id="left-album">-</span>
+          <div class="card-title" id="left-title">-</div>
+          <div class="card-artist" id="left-artist">-</div>
+        </div>
+        <button type="button" class="btn-choose">👈 左の曲が好き</button>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <div class="song-card" id="card-right">
+        <div>
+          <span class="card-album-tag" id="right-album">-</span>
+          <div class="card-title" id="right-title">-</div>
+          <div class="card-artist" id="right-artist">-</div>
+        </div>
+        <button type="button" class="btn-choose">👉 右の曲が好き</button>
+      </div>
+    </div>
+
+    <div class="battle-actions">
+      <button type="button" class="btn-action" id="btn-skip">🤝 スキップ / 引き分け</button>
+      <button type="button" class="btn-action" id="btn-undo" disabled>↩ 一つ戻る</button>
+      <button type="button" class="btn-action btn-finalize" id="btn-finalize">🏁 現在の順位で確定する</button>
+    </div>
+
+    <div style="text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:16px;">
+      ショートカット: [ 1 / ←: 左 ] [ 2 / →: 右 ] [ 3 / ↓: スキップ ] [ Z: 戻る ]
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULT VIEW -->
+  <div id="result-view" class="view-panel">
+    <div class="result-header">
+      <h2>🏆 EUROMACH BEST 50</h2>
+      <p id="result-desc" style="color: var(--text-muted); font-size: 0.85rem; margin-top:4px;"></p>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
+      <button type="button" class="btn-action" id="btn-copy-ranking">📋 ランキングをコピー</button>
+      <button type="button" class="btn-action" id="btn-restart" style="background:var(--accent-red); color:#fff;">🔄 最初に戻る</button>
+    </div>
+
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th style="width: 50px; text-align: center;">順位</th>
+          <th>曲名 / アーティスト</th>
+          <th style="width: 140px;">アルバム</th>
+        </tr>
+      </thead>
+      <tbody id="ranking-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<div id="toast" class="toast">コピーしました！</div>
+
+<script>
+// --- RAW CSV DATA ---
+const RAW_CSV = `曲名,アーティスト名,出典アルバム
+Suck A Bazooka,"Franz ""Mad Cow"" Tornado & The Bazooka Girls",SUPER EUROBEAT presents EUROMACH Vol.1
+Shake Me Up,Jungle Bill,SUPER EUROBEAT presents EUROMACH Vol.1
+Love And Fever Tonight,Toby Ash,SUPER EUROBEAT presents EUROMACH Vol.1
+Shocking Fever,Alvin,SUPER EUROBEAT presents EUROMACH Vol.1
+Midnight,Tomas Lee,SUPER EUROBEAT presents EUROMACH Vol.1
+Go Go To Heaven,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.1
+Touch Me Baby,Doctor Stranger,SUPER EUROBEAT presents EUROMACH Vol.1
+Gucci Girl,Cindy,SUPER EUROBEAT presents EUROMACH Vol.1
+Move In The Nite,Leslie Hammond,SUPER EUROBEAT presents EUROMACH Vol.1
+It's A Beautiful Life,Christine,SUPER EUROBEAT presents EUROMACH Vol.1
+Nightmare,Rocky,SUPER EUROBEAT presents EUROMACH Vol.1
+Laser Gun,Jungle Bill,SUPER EUROBEAT presents EUROMACH Vol.1
+Ike Ike,Tri-Star,SUPER EUROBEAT presents EUROMACH Vol.1
+Day By Day,Debbie Key,SUPER EUROBEAT presents EUROMACH Vol.1
+Lovers,Tracy,SUPER EUROBEAT presents EUROMACH Vol.1
+Jungle Night,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.1
+Speedy Speed Boy,Marko Polo,SUPER EUROBEAT presents EUROMACH Vol.1
+Memories Of Love,Baby Gold,SUPER EUROBEAT presents EUROMACH Vol.1
+Lovin' You Lovin' Me,Christine-N. Joy,SUPER EUROBEAT presents EUROMACH Vol.1
+Saturday Night,Nikita Jr.,SUPER EUROBEAT presents EUROMACH Vol.1
+Yacchaa Boi,Garcon,SUPER EUROBEAT presents EUROMACH Vol.1
+Bad World,Ken Martin,SUPER EUROBEAT presents EUROMACH Vol.1
+Foxy Lady,Jeff Driller,SUPER EUROBEAT presents EUROMACH Vol.1
+Made Of Fire,Niko,SUPER EUROBEAT presents EUROMACH Vol.1
+Mikado,Dave McLoud,SUPER EUROBEAT presents EUROMACH Vol.1
+Bandolero Comanchero,"Franz Tornado & The ""Mad Cow"" Girls",SUPER EUROBEAT presents EUROMACH Vol.1
+Space Racing,Mega NRG Man,SUPER EUROBEAT presents EUROMACH Vol.2
+Deja Vu,Dave Rodgers,SUPER EUROBEAT presents EUROMACH Vol.2
+Do You Wanna Dance,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.2
+Macho Man,Lolita,SUPER EUROBEAT presents EUROMACH Vol.2
+Big Time,Suzy Lazy,SUPER EUROBEAT presents EUROMACH Vol.2
+Ride Like The Wind,Karen,SUPER EUROBEAT presents EUROMACH Vol.2
+Over The Line,Mega NRG Man,SUPER EUROBEAT presents EUROMACH Vol.2
+Brave Heart,Silver,SUPER EUROBEAT presents EUROMACH Vol.2
+Sugar Sugar Honey,Linda Ross,SUPER EUROBEAT presents EUROMACH Vol.2
+Rain,Mako,SUPER EUROBEAT presents EUROMACH Vol.2
+Don't Go Breaking My Heart,Karina,SUPER EUROBEAT presents EUROMACH Vol.2
+I Belong To You,Crystal,SUPER EUROBEAT presents EUROMACH Vol.2
+Keep It For Tonite,Priscilla,SUPER EUROBEAT presents EUROMACH Vol.2
+Every Time You Go,Pizza Girl,SUPER EUROBEAT presents EUROMACH Vol.2
+Go! Get Ready!,Dave Mc Loud,SUPER EUROBEAT presents EUROMACH Vol.2
+Take Me To Your Heart,Cherry,SUPER EUROBEAT presents EUROMACH Vol.2
+Don't Give Up Your Love,Denise,SUPER EUROBEAT presents EUROMACH Vol.2
+Touch Me Here Touch Me There,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.2
+Ready 4 Your Lovely Game,Eurosisters,SUPER EUROBEAT presents EUROMACH Vol.2
+I Want To Be Free,Mike Danger,SUPER EUROBEAT presents EUROMACH Vol.2
+Fireball,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.2
+You Make Me Feel,Dusty,SUPER EUROBEAT presents EUROMACH Vol.2
+C'mon Baby Tonight,Jimmy Bravo,SUPER EUROBEAT presents EUROMACH Vol.2
+Brother & Sister,Virginelle,SUPER EUROBEAT presents EUROMACH Vol.2
+Dance On Saturday Night,Groove Twins,SUPER EUROBEAT presents EUROMACH Vol.2
+Make A Move,Candy Taylor,SUPER EUROBEAT presents EUROMACH Vol.2
+Hello Goodbye,Priscilla,SUPER EUROBEAT presents EUROMACH Vol.3
+Hey Ho Let's Go,Dusty,SUPER EUROBEAT presents EUROMACH Vol.3
+Be One,Tiger Shark,SUPER EUROBEAT presents EUROMACH Vol.3
+Your Passion (Catch My Life),Lisa Johnson,SUPER EUROBEAT presents EUROMACH Vol.3
+Love Rhapsody,Victoria,SUPER EUROBEAT presents EUROMACH Vol.3
+Baby Baby Blue,Lolita,SUPER EUROBEAT presents EUROMACH Vol.3
+Walking Around The Town,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.3
+Break The Silence,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.3
+Bad Boy Can Believe Me,Remy Panther,SUPER EUROBEAT presents EUROMACH Vol.3
+Turbo Night,Francis Cooper,SUPER EUROBEAT presents EUROMACH Vol.3
+Walking Down The Street,Claudia Vip,SUPER EUROBEAT presents EUROMACH Vol.3
+Ever Lasting Love,Karen,SUPER EUROBEAT presents EUROMACH Vol.3
+I Wanna Live,Valentina,SUPER EUROBEAT presents EUROMACH Vol.3
+Waiting For You,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.3
+Night Angel,Alexis,SUPER EUROBEAT presents EUROMACH Vol.3
+Why Why,Big Jim,SUPER EUROBEAT presents EUROMACH Vol.3
+Delta Force,Cy-Ro,SUPER EUROBEAT presents EUROMACH Vol.3
+Rain Man,Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.3
+I'm Gonna Crazy For You,Dolly Pop,SUPER EUROBEAT presents EUROMACH Vol.3
+I'm Crazy For Your Love,Black Eva,SUPER EUROBEAT presents EUROMACH Vol.3
+Love Me Crazy,Maddy Layne,SUPER EUROBEAT presents EUROMACH Vol.3
+Move On,Love & Pride,SUPER EUROBEAT presents EUROMACH Vol.3
+Zorro Zorro,Atrium,SUPER EUROBEAT presents EUROMACH Vol.3
+Go Nakata,Joe Banana,SUPER EUROBEAT presents EUROMACH Vol.3
+Velfarre 2000,Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.3
+Nanka Choudai ~Please Give Me Something~ (New Generation Remix),Osaka Pudding,SUPER EUROBEAT presents EUROMACH Vol.3
+Street Of Fire,Dave Mc Loud,SUPER EUROBEAT presents EUROMACH Vol.4
+Move It On The Rhythm,Cy-Ro,SUPER EUROBEAT presents EUROMACH Vol.4
+Women On Time,The Girls,SUPER EUROBEAT presents EUROMACH Vol.4
+Wanna Be Your Lover,Michelle Rose,SUPER EUROBEAT presents EUROMACH Vol.4
+Always In My Mind,Dominique Pratt,SUPER EUROBEAT presents EUROMACH Vol.4
+Into My Dream,Bi Bi,SUPER EUROBEAT presents EUROMACH Vol.4
+The Melody Is In Your Heart,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.4
+Living Loud,Donna,SUPER EUROBEAT presents EUROMACH Vol.4
+Come Back To Me,Anika,SUPER EUROBEAT presents EUROMACH Vol.4
+Baby Love,The Wonder-Girls,SUPER EUROBEAT presents EUROMACH Vol.4
+I Need Your Passion,Baby Gold,SUPER EUROBEAT presents EUROMACH Vol.4
+Go Superman,Macho Gang,SUPER EUROBEAT presents EUROMACH Vol.4
+Sunshine Baby,Milk And Coffea,SUPER EUROBEAT presents EUROMACH Vol.4
+Change,Anika,SUPER EUROBEAT presents EUROMACH Vol.4
+Just A Little Love,Lolita,SUPER EUROBEAT presents EUROMACH Vol.4
+Sexy Diva,David Bird,SUPER EUROBEAT presents EUROMACH Vol.4
+While My Love Awaits,Drama,SUPER EUROBEAT presents EUROMACH Vol.4
+You Are My Paradise,Lou-Lou Maria,SUPER EUROBEAT presents EUROMACH Vol.4
+Easy Busy,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.4
+I'm Free,Virginelle,SUPER EUROBEAT presents EUROMACH Vol.4
+It Is A Magical Dream,Remy Panther,SUPER EUROBEAT presents EUROMACH Vol.4
+Sexy Sexy Sexy,Ken Martin,SUPER EUROBEAT presents EUROMACH Vol.4
+Burn Burn Get My Fire,Boogaboo,SUPER EUROBEAT presents EUROMACH Vol.4
+How Yeah,Franz Tornado,SUPER EUROBEAT presents EUROMACH Vol.4
+Young & Wild,Fastway,SUPER EUROBEAT presents EUROMACH Vol.4
+Private Wars (Euro Mix),Dream,SUPER EUROBEAT presents EUROMACH Vol.4
+Spacelove,Fastway,SUPER EUROBEAT presents EUROMACH Vol.5
+Wow Tokyo,Mote Mote,SUPER EUROBEAT presents EUROMACH Vol.5
+Baby Besame,Doki Doki,SUPER EUROBEAT presents EUROMACH Vol.5
+Deep Into Your Love,Priscilla,SUPER EUROBEAT presents EUROMACH Vol.5
+Guardian Angel,Luna,SUPER EUROBEAT presents EUROMACH Vol.5
+Feel It Feel It In My Heart,Barbie,SUPER EUROBEAT presents EUROMACH Vol.5
+Burning In The Night,Betty Blue,SUPER EUROBEAT presents EUROMACH Vol.5
+Night Fly,Mister Fly,SUPER EUROBEAT presents EUROMACH Vol.5
+Feelings Of My Heart,Knick Knack,SUPER EUROBEAT presents EUROMACH Vol.5
+Hey Hey Dark In My Heart,Louise,SUPER EUROBEAT presents EUROMACH Vol.5
+Once More,Michelle Rose,SUPER EUROBEAT presents EUROMACH Vol.5
+Just An Illusion,Princess F.,SUPER EUROBEAT presents EUROMACH Vol.5
+Honey Honey,Milk And Coffea,SUPER EUROBEAT presents EUROMACH Vol.5
+Follow Me Now,Sonya,SUPER EUROBEAT presents EUROMACH Vol.5
+Happy To Dance,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.5
+Kiss And Hug Me,Marlene,SUPER EUROBEAT presents EUROMACH Vol.5
+Money Gets Funny,Dee Dee Wonder,SUPER EUROBEAT presents EUROMACH Vol.5
+A Lovely Night,Alvin,SUPER EUROBEAT presents EUROMACH Vol.5
+You Will See,Debbie Key,SUPER EUROBEAT presents EUROMACH Vol.5
+Another Love,Emy,SUPER EUROBEAT presents EUROMACH Vol.5
+Kiss Me Tonight,Lucya,SUPER EUROBEAT presents EUROMACH Vol.5
+Big Yeah,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.5
+I'm No Angel,Dolly Pop,SUPER EUROBEAT presents EUROMACH Vol.5
+Bad Girl,Jeff Driller,SUPER EUROBEAT presents EUROMACH Vol.5
+Hyper Bazooka Revolution,Tam Arrow,SUPER EUROBEAT presents EUROMACH Vol.5
+Aishiattemasu (New Generation Mix),Key-A-Kiss,SUPER EUROBEAT presents EUROMACH Vol.5
+Ganguro,Franz Tornado & The Yamanba-Gals,SUPER EUROBEAT presents EUROMACH Vol.6
+Bad Cow,Jungle Bill,SUPER EUROBEAT presents EUROMACH Vol.6
+Emotions,Hot Cold,SUPER EUROBEAT presents EUROMACH Vol.6
+Play The Music,Ace,SUPER EUROBEAT presents EUROMACH Vol.6
+Going Home,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.6
+Suzy Lazy,Suzy Lazy,SUPER EUROBEAT presents EUROMACH Vol.6
+Don't Wanna Let You Down,Giorgia Barrows,SUPER EUROBEAT presents EUROMACH Vol.6
+You Play A Wonderful Game,Lilly,SUPER EUROBEAT presents EUROMACH Vol.6
+Dum Dum,Dominique Pratt,SUPER EUROBEAT presents EUROMACH Vol.6
+Don't Stop The Music,Valentina,SUPER EUROBEAT presents EUROMACH Vol.6
+You & I,Christine,SUPER EUROBEAT presents EUROMACH Vol.6
+Welcome To The Moon,Space Girls,SUPER EUROBEAT presents EUROMACH Vol.6
+Without You I Feel Blue,Fulvia Coupe,SUPER EUROBEAT presents EUROMACH Vol.6
+"1 For Me, 1 For You",Valery Scott,SUPER EUROBEAT presents EUROMACH Vol.6
+Number One,Anika,SUPER EUROBEAT presents EUROMACH Vol.6
+Because I'm Loving You,Louise,SUPER EUROBEAT presents EUROMACH Vol.6
+Sunshine In My Life,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.6
+The Final Countdown,Vanessa,SUPER EUROBEAT presents EUROMACH Vol.6
+Tell Me,Luna,SUPER EUROBEAT presents EUROMACH Vol.6
+Prison Of Love,The Wonder-Girls,SUPER EUROBEAT presents EUROMACH Vol.6
+The Boom Boom Power,Tam Arrow,SUPER EUROBEAT presents EUROMACH Vol.6
+Chica Loca,Jeff Driller,SUPER EUROBEAT presents EUROMACH Vol.6
+Fightin' The Night,Dave Mc Loud,SUPER EUROBEAT presents EUROMACH Vol.6
+Crazy For Love,Dusty,SUPER EUROBEAT presents EUROMACH Vol.6
+Black Magic,Joe Banana,SUPER EUROBEAT presents EUROMACH Vol.6
+No.1 ~Kagayake Otome~ (DJ Shu's Light Mix),Tokyo Pudding,SUPER EUROBEAT presents EUROMACH Vol.6
+Money Go Round,Fastway,SUPER EUROBEAT presents EUROMACH Vol.7
+Samurai,Jimmy Bravo,SUPER EUROBEAT presents EUROMACH Vol.7
+Tropical Carnival,Fun Cool,SUPER EUROBEAT presents EUROMACH Vol.7
+Spitfire,Beatman,SUPER EUROBEAT presents EUROMACH Vol.7
+Kiss Me Kiss Me,Baby Gold,SUPER EUROBEAT presents EUROMACH Vol.7
+Your Love Is Magic,Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.7
+Hot Chie Cootchie,The Flippers,SUPER EUROBEAT presents EUROMACH Vol.7
+My Love For You,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.7
+Flying Around The World,Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.7
+Everybody Go,Joe D. Toaster,SUPER EUROBEAT presents EUROMACH Vol.7
+Help Me,Delta Queens,SUPER EUROBEAT presents EUROMACH Vol.7
+Crazy Generation,Christine,SUPER EUROBEAT presents EUROMACH Vol.7
+In Your Eyes,Kika,SUPER EUROBEAT presents EUROMACH Vol.7
+Sleep In Your Arms,Valentina,SUPER EUROBEAT presents EUROMACH Vol.7
+Everybody Dance,Lolita,SUPER EUROBEAT presents EUROMACH Vol.7
+Don't Get Away,Dolly Pop,SUPER EUROBEAT presents EUROMACH Vol.7
+Viva L'amour,Chris,SUPER EUROBEAT presents EUROMACH Vol.7
+U Never Say Goodbye,Maddy Layne,SUPER EUROBEAT presents EUROMACH Vol.7
+Midnight Song,Hot Cold,SUPER EUROBEAT presents EUROMACH Vol.7
+The Lock Of Love,Lucya,SUPER EUROBEAT presents EUROMACH Vol.7
+Love Me Tonite,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.7
+Johnny Go,Volta & Gabbana,SUPER EUROBEAT presents EUROMACH Vol.7
+Love Gun,Mr. M,SUPER EUROBEAT presents EUROMACH Vol.7
+Gotta Be My Babe,Dr. Stranger,SUPER EUROBEAT presents EUROMACH Vol.7
+X-Man Story,Jackie 'O',SUPER EUROBEAT presents EUROMACH Vol.7
+Lucky Girl De Ikou (Y&Co. Lucky Euro Mix),Key-A-Kiss,SUPER EUROBEAT presents EUROMACH Vol.7
+My Name Is Goofy,Kiki & Kika feat. Goofy DJ,SUPER EUROBEAT presents EUROMACH Vol.8
+Stop Lookin' Back,Nick Mansell,SUPER EUROBEAT presents EUROMACH Vol.8
+Rocket Man,Fastway,SUPER EUROBEAT presents EUROMACH Vol.8
+U.S.A.,Babby One,SUPER EUROBEAT presents EUROMACH Vol.8
+One Shot Girl,Tam Arrow,SUPER EUROBEAT presents EUROMACH Vol.8
+Turn The Beat Around,Black Eva,SUPER EUROBEAT presents EUROMACH Vol.8
+White Is For You Black Is For Me,Claudia Vip,SUPER EUROBEAT presents EUROMACH Vol.8
+Shoobie Doobie,Sarah,SUPER EUROBEAT presents EUROMACH Vol.8
+Give You My Love,Lucya,SUPER EUROBEAT presents EUROMACH Vol.8
+I Need Somebody To Love,Louise,SUPER EUROBEAT presents EUROMACH Vol.8
+Queen Of The Night,Giorgia Barrows,SUPER EUROBEAT presents EUROMACH Vol.8
+Tell Me The Reason Why,Elisa,SUPER EUROBEAT presents EUROMACH Vol.8
+Light My Fire,Maria Short,SUPER EUROBEAT presents EUROMACH Vol.8
+Take Me Up And Higher,Lou Lou Marina,SUPER EUROBEAT presents EUROMACH Vol.8
+Renegado,Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.8
+Little Love,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.8
+The Colour Of My Love,Valentina,SUPER EUROBEAT presents EUROMACH Vol.8
+Happy Happy,Leila,SUPER EUROBEAT presents EUROMACH Vol.8
+One Night To Remember,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.8
+Fame,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.8
+Don't Go,Ace,SUPER EUROBEAT presents EUROMACH Vol.8
+Tokyo Night,J. Rush,SUPER EUROBEAT presents EUROMACH Vol.8
+Take My Time,High Level,SUPER EUROBEAT presents EUROMACH Vol.8
+Sheik Yarbati Moves,Ely Kotero,SUPER EUROBEAT presents EUROMACH Vol.8
+Soaker,"Franz ""Mad Cow"" Tornado & The Suck-A-Bazooka Girls",SUPER EUROBEAT presents EUROMACH Vol.8
+Watashi No Kare Wa Sekiyuou (Y&Co. Euro Oil Mix),Key-A-Kiss,SUPER EUROBEAT presents EUROMACH Vol.8
+All Right Nippon,Jimmy Bravo,SUPER EUROBEAT presents EUROMACH Vol.9
+Bang Bang Bang,Joe Banana,SUPER EUROBEAT presents EUROMACH Vol.9
+Seventeen,Ciao Ciao,SUPER EUROBEAT presents EUROMACH Vol.9
+Colors Of My Love,Baby Gold,SUPER EUROBEAT presents EUROMACH Vol.9
+To Be Your Angel,Christine,SUPER EUROBEAT presents EUROMACH Vol.9
+Celebration Time,Doki Doki,SUPER EUROBEAT presents EUROMACH Vol.9
+Sweet Dream Of Love,Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.9
+Wanna Feel You,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.9
+Love Is The Way,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.9
+Donna Tokyo,Luna,SUPER EUROBEAT presents EUROMACH Vol.9
+Cantare Ballare (Happy Eurobeat),Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.9
+All The Love Inside,Lucya,SUPER EUROBEAT presents EUROMACH Vol.9
+Think Of You,Lolita,SUPER EUROBEAT presents EUROMACH Vol.9
+Black Roses,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.9
+Solid Gold,Dusty,SUPER EUROBEAT presents EUROMACH Vol.9
+Let The People Say,Regina,SUPER EUROBEAT presents EUROMACH Vol.9
+Call Me,Messalind,SUPER EUROBEAT presents EUROMACH Vol.9
+Love Train,Susan Key,SUPER EUROBEAT presents EUROMACH Vol.9
+Cybernetik Luv,Dee Dee Wonder,SUPER EUROBEAT presents EUROMACH Vol.9
+Kosmic Woofer,P. Stone,SUPER EUROBEAT presents EUROMACH Vol.9
+Future Boy,Beatman,SUPER EUROBEAT presents EUROMACH Vol.9
+I Wanna Be Material Girl,Miss K,SUPER EUROBEAT presents EUROMACH Vol.9
+Take My Breath Away,Ace,SUPER EUROBEAT presents EUROMACH Vol.9
+1 2 3 4 Fire,Fastway,SUPER EUROBEAT presents EUROMACH Vol.9
+Super Euro Flash,"Franz ""V.I.P."" Tornado & Bazooka ""T.C.V."" Girl",SUPER EUROBEAT presents EUROMACH Vol.9
+777,Fastway,SUPER EUROBEAT presents EUROMACH Vol.9
+24 Hours A Day With You,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.11
+She's My Baby Chevrolet,Pecos Drill,SUPER EUROBEAT presents EUROMACH Vol.11
+Rock 'N' Dolls,Lou-Lou Marina,SUPER EUROBEAT presents EUROMACH Vol.11
+Boys On Fire,Space Girls,SUPER EUROBEAT presents EUROMACH Vol.11
+My Love Romance,Louise,SUPER EUROBEAT presents EUROMACH Vol.11
+Little Crazy Baby,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.11
+Till The End Of Time,Christine,SUPER EUROBEAT presents EUROMACH Vol.11
+A Little Goodbye,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.11
+People Come On!,Eurobeat Girls,SUPER EUROBEAT presents EUROMACH Vol.11
+Around The Universe,Vanilla,SUPER EUROBEAT presents EUROMACH Vol.11
+Too Many Lovers Night And Day,Jinko Sbilenko,SUPER EUROBEAT presents EUROMACH Vol.11
+Good Time,Lilly,SUPER EUROBEAT presents EUROMACH Vol.11
+Highway Star,Mike West,SUPER EUROBEAT presents EUROMACH Vol.11
+When I Fall In Love,Kara Mell,SUPER EUROBEAT presents EUROMACH Vol.11
+I Want Your Kiss Boy,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.11
+Sugar Baby Love Me,Lolita,SUPER EUROBEAT presents EUROMACH Vol.11
+Eurobeat Beat Boom,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.11
+Come Together,Martina Dry,SUPER EUROBEAT presents EUROMACH Vol.11
+Mister Robinson,Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.11
+Baby Come On,Babby One,SUPER EUROBEAT presents EUROMACH Vol.11
+Hey You!,Lucya,SUPER EUROBEAT presents EUROMACH Vol.11
+Spirit Of The Night,Nick Mansell,SUPER EUROBEAT presents EUROMACH Vol.11
+Open Your Eyes,Ace,SUPER EUROBEAT presents EUROMACH Vol.11
+Franz Tornado,Mad Cow,SUPER EUROBEAT presents EUROMACH Vol.11
+Caballero With Sombrero,Franz Tornado & Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.12
+California Girl,Mote Mote,SUPER EUROBEAT presents EUROMACH Vol.12
+ParaPara AllStars,Volta & Gabbana,SUPER EUROBEAT presents EUROMACH Vol.12
+Heartbeat,Christine,SUPER EUROBEAT presents EUROMACH Vol.12
+Party Girl,Kika,SUPER EUROBEAT presents EUROMACH Vol.12
+Too Smart To Get My Heart,Giulietta Sprint,SUPER EUROBEAT presents EUROMACH Vol.12
+Wannabe My Dreamy Valentine,Doll Sisters,SUPER EUROBEAT presents EUROMACH Vol.12
+Sexy Love Banana,Ely Kotero,SUPER EUROBEAT presents EUROMACH Vol.12
+Snake Dance,Kiki & Kika,SUPER EUROBEAT presents EUROMACH Vol.12
+History,Lucya,SUPER EUROBEAT presents EUROMACH Vol.12
+Gimme The World,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.12
+Come Together,Julia Blackmore,SUPER EUROBEAT presents EUROMACH Vol.12
+My Little Girl,Rick Castle,SUPER EUROBEAT presents EUROMACH Vol.12
+Trust Me Now,Valentina,SUPER EUROBEAT presents EUROMACH Vol.12
+Walking To My Life,Mr. M,SUPER EUROBEAT presents EUROMACH Vol.12
+Nothing To Lose,Vicky Vale,SUPER EUROBEAT presents EUROMACH Vol.12
+Traffic In My Bed,Baby Gold,SUPER EUROBEAT presents EUROMACH Vol.12
+"Stop That Music, Stop The Fire",Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.12
+Superman Macho Man,Dolly Pop,SUPER EUROBEAT presents EUROMACH Vol.12
+Sexy Lover Sexy Night,Lolita,SUPER EUROBEAT presents EUROMACH Vol.12
+King Of The Nightmares,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.12
+"In The Sky, In Your Soul",Nick Mansell,SUPER EUROBEAT presents EUROMACH Vol.12
+Dynamite,Ace,SUPER EUROBEAT presents EUROMACH Vol.12
+Big Brother,Fastway,SUPER EUROBEAT presents EUROMACH Vol.12
+Baby Frankenstein,Riki 1,SUPER EUROBEAT presents EUROMACH Vol.12
+Discow Moscow,Mad Cow & The Royal Eurobeat Orchestra Of Bazookistan,SUPER EUROBEAT presents EUROMACH Vol.13
+Bazooka Girl,Bazooka Girl,SUPER EUROBEAT presents EUROMACH Vol.13
+Shake Shake Shake,Riki 1,SUPER EUROBEAT presents EUROMACH Vol.13
+I'm Gonna Be Number One,Beat Man,SUPER EUROBEAT presents EUROMACH Vol.13
+Mystery,Dusty,SUPER EUROBEAT presents EUROMACH Vol.13
+TV Hero,Ace,SUPER EUROBEAT presents EUROMACH Vol.13
+Riding On Fire,Lolita,SUPER EUROBEAT presents EUROMACH Vol.13
+Let Me Be Your Angel,Christine,SUPER EUROBEAT presents EUROMACH Vol.13
+Sentimental Song,Lucya,SUPER EUROBEAT presents EUROMACH Vol.13
+Tomorrow Night Is A Magical Fire,Jee Bee,SUPER EUROBEAT presents EUROMACH Vol.13
+I Just Wanna Dance,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.13
+I'm Coming,Marlene,SUPER EUROBEAT presents EUROMACH Vol.13
+Turn Me On,Eurobeat Girls,SUPER EUROBEAT presents EUROMACH Vol.13
+Tokyo,Arena 69,SUPER EUROBEAT presents EUROMACH Vol.13
+L.O.V.E. You & Me,Melissa White,SUPER EUROBEAT presents EUROMACH Vol.13
+Love Is Forever,Dee Dee Wonder,SUPER EUROBEAT presents EUROMACH Vol.13
+Take Me To Paradise,Starkly Ice,SUPER EUROBEAT presents EUROMACH Vol.13
+"No, I Don't Wanna Wait For You",Harry Ken,SUPER EUROBEAT presents EUROMACH Vol.13
+Love In Venice,Lilly,SUPER EUROBEAT presents EUROMACH Vol.13
+Night And Day,Dolly Pop,SUPER EUROBEAT presents EUROMACH Vol.13
+Parapara Hi-Dee,Alice In ParaPara Land,SUPER EUROBEAT presents EUROMACH Vol.13
+I Wanna Play Guitar!,Kiki & Fancy feat. Goofy DJ,SUPER EUROBEAT presents EUROMACH Vol.13
+The Beat Of The Dance,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.13
+Rock The Universe,J. Storm,SUPER EUROBEAT presents EUROMACH Vol.13
+No Return,Fastway,SUPER EUROBEAT presents EUROMACH Vol.13
+Stop & Go,Dusty,SUPER EUROBEAT presents EUROMACH Vol.14
+Don't Stop The Dance,Ace,SUPER EUROBEAT presents EUROMACH Vol.14
+Don't Stop,Rick Castle,SUPER EUROBEAT presents EUROMACH Vol.14
+Feel The Fire,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.14
+Need Love,Mega NRG Man,SUPER EUROBEAT presents EUROMACH Vol.14
+Carillon,Black Eva,SUPER EUROBEAT presents EUROMACH Vol.14
+Revolution,Doll Sisters,SUPER EUROBEAT presents EUROMACH Vol.14
+Another Night Of Fantasy,Giorgia Barrows,SUPER EUROBEAT presents EUROMACH Vol.14
+Let The Music Play Forever,Kara Mell,SUPER EUROBEAT presents EUROMACH Vol.14
+Street Boy,Harry Ken,SUPER EUROBEAT presents EUROMACH Vol.14
+Calling My Number,Alexis,SUPER EUROBEAT presents EUROMACH Vol.14
+Feelin' Alive,Drama,SUPER EUROBEAT presents EUROMACH Vol.14
+Wind & Fire,Mickey B.,SUPER EUROBEAT presents EUROMACH Vol.14
+Music Is Love,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.14
+Freedom Wild,Nick Mansell,SUPER EUROBEAT presents EUROMACH Vol.14
+Always On My Mind,Kite,SUPER EUROBEAT presents EUROMACH Vol.14
+Don't Go Play With My Heart Again,Melissa White,SUPER EUROBEAT presents EUROMACH Vol.14
+Chao Chao Chao,Fancy,SUPER EUROBEAT presents EUROMACH Vol.14
+Crazy,Vanilla,SUPER EUROBEAT presents EUROMACH Vol.14
+Baby Can You Love Me,Go Go Girls,SUPER EUROBEAT presents EUROMACH Vol.14
+I Love America,Lou Lou Marina,SUPER EUROBEAT presents EUROMACH Vol.14
+Korea Japan,Mote Mote,SUPER EUROBEAT presents EUROMACH Vol.14
+Betty Blue Baby You,Nikka Tosta,SUPER EUROBEAT presents EUROMACH Vol.14
+Maxi,Joe D. Toaster,SUPER EUROBEAT presents EUROMACH Vol.14
+Bazooka Pistolero,Franz Tornado,SUPER EUROBEAT presents EUROMACH Vol.14
+Fantasista!,Ace,SUPER EUROBEAT presents EUROMACH Vol.15
+Formula 1,Fastway,SUPER EUROBEAT presents EUROMACH Vol.15
+We Are The Children Of Rock,J. Storm,SUPER EUROBEAT presents EUROMACH Vol.15
+Ready To Love,Ted Candela,SUPER EUROBEAT presents EUROMACH Vol.15
+My Technotronic New Desire,Babby One,SUPER EUROBEAT presents EUROMACH Vol.15
+You Make Me Feel Like A Natural Girl,Mara Nell,SUPER EUROBEAT presents EUROMACH Vol.15
+Harmony,Ciao Ciao,SUPER EUROBEAT presents EUROMACH Vol.15
+My Friend,Norma Sheffield,SUPER EUROBEAT presents EUROMACH Vol.15
+Dance Little Sister,Kiki & Fancy,SUPER EUROBEAT presents EUROMACH Vol.15
+Don't Play With Me,Kelly Wright,SUPER EUROBEAT presents EUROMACH Vol.15
+Make Me Wonder In The Sky,Louise,SUPER EUROBEAT presents EUROMACH Vol.15
+Hey Don't Go Breaking My Heart,Pasty Son,SUPER EUROBEAT presents EUROMACH Vol.15
+You Shot Me Down,Symbol,SUPER EUROBEAT presents EUROMACH Vol.15
+Love In September,Fulvia Coupe,SUPER EUROBEAT presents EUROMACH Vol.15
+Valentino Macho Latino,Gino Mandorino,SUPER EUROBEAT presents EUROMACH Vol.15
+Top Of The World,Kika,SUPER EUROBEAT presents EUROMACH Vol.15
+Curious,Susan Bell,SUPER EUROBEAT presents EUROMACH Vol.15
+Sweet & Tender Lies,Lucya feat. Ace,SUPER EUROBEAT presents EUROMACH Vol.15
+Blem Blem,Ace Warrior,SUPER EUROBEAT presents EUROMACH Vol.15
+Rockin' Dome,Van T.K.,SUPER EUROBEAT presents EUROMACH Vol.15
+Mr. Nice Guy,Christine,SUPER EUROBEAT presents EUROMACH Vol.15
+Slave To The Rhythm,Drama,SUPER EUROBEAT presents EUROMACH Vol.15
+Electro Cow,Garcon,SUPER EUROBEAT presents EUROMACH Vol.15
+Ahy-Ahy-Ahy-Ah,Jeff Driller,SUPER EUROBEAT presents EUROMACH Vol.15
+Besame Mucho,Volta & Gabbana,SUPER EUROBEAT presents EUROMACH Vol.15`;
+
+const STORAGE_KEY = 'EUROMACH_SORTER_SAVE_V3';
+
+// --- CSV PARSER ---
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const songs = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+    const row = [];
+    let inQuotes = false;
+    let current = '';
+    for (let j = 0; j < line.length; j++) {
+      const c = line[j];
+      if (c === '"') {
+        if (inQuotes && line[j + 1] === '"') { current += '"'; j++; }
+        else { inQuotes = !inQuotes; }
+      } else if (c === ',' && !inQuotes) {
+        row.push(current);
+        current = '';
+      } else {
+        current += c;
+      }
+    }
+    row.push(current);
+    if (row.length >= 3) {
+      songs.push({
+        id: i,
+        title: row[0].trim(),
+        artist: row[1].trim(),
+        album: row[2].trim(),
+        wins: 0,
+        losses: 0,
+        score: 0,
+        eliminated: false
+      });
+    }
+  }
+  return songs;
+}
+
+const ALL_SONGS = parseCSV(RAW_CSV);
+const ALBUMS = [...new Set(ALL_SONGS.map(s => s.album))];
+
+// --- APP STATE ---
+let selectedSongIds = new Set(ALL_SONGS.map(s => s.id));
+let sortMode = 'fast'; // 'fast' (1 loss out) or 'standard' (2 losses out)
+let phase = 'selection'; // 'selection', 'qualifier', 'final', 'result'
+let candidates = [];
+let stepCount = 0;
+let estimatedTotal = 450;
+let historyStack = [];
+
+// Qualifier Pairing State
+let currentPair = null;
+let recentPairIds = [];
+
+// Final Merge Sort State
+let currentQueue = [];
+let nextQueue = [];
+let activeA = null;
+let activeB = null;
+let idxA = 0;
+let idxB = 0;
+let mergedRun = [];
+
+// DOM References
+const selectionView = document.getElementById('selection-view');
+const battleView = document.getElementById('battle-view');
+const resultView = document.getElementById('result-view');
+const resumeBanner = document.getElementById('resume-banner');
+const resumeInfo = document.getElementById('resume-info');
+const saveTimeText = document.getElementById('save-time-text');
+
+const albumPillsContainer = document.getElementById('album-pills-container');
+const albumListContainer = document.getElementById('album-list-container');
+const selectedCountEl = document.getElementById('selected-count');
+const totalSongsCountEl = document.getElementById('total-songs-count');
+const btnStartSort = document.getElementById('btn-start-sort');
+const searchInput = document.getElementById('search-input');
+
+const cardLeft = document.getElementById('card-left');
+const cardRight = document.getElementById('card-right');
+const leftTitle = document.getElementById('left-title');
+const leftArtist = document.getElementById('left-artist');
+const leftAlbum = document.getElementById('left-album');
+const rightTitle = document.getElementById('right-title');
+const rightArtist = document.getElementById('right-artist');
+const rightAlbum = document.getElementById('right-album');
+
+const phaseBadge = document.getElementById('phase-badge');
+const phaseDesc = document.getElementById('phase-desc');
+const progressBar = document.getElementById('progress-bar');
+const progressPercent = document.getElementById('progress-percent');
+const battleStep = document.getElementById('battle-step');
+const btnSkip = document.getElementById('btn-skip');
+const btnUndo = document.getElementById('btn-undo');
+const btnFinalize = document.getElementById('btn-finalize');
+
+const rankingBody = document.getElementById('ranking-body');
+const resultDesc = document.getElementById('result-desc');
+const btnCopyRanking = document.getElementById('btn-copy-ranking');
+const btnRestart = document.getElementById('btn-restart');
+const toast = document.getElementById('toast');
+
+// --- INITIALIZATION ---
+function init() {
+  totalSongsCountEl.textContent = ALL_SONGS.length;
+  renderAlbumPills();
+  renderAlbumSongBlocks();
+  updateSelectionCount();
+  checkSavedProgress();
+
+  document.querySelectorAll('input[name="sortMode"]').forEach(radio => {
+    radio.addEventListener('change', (e) => sortMode = e.target.value);
+  });
+}
+
+function renderAlbumPills() {
+  albumPillsContainer.innerHTML = '';
+  ALBUMS.forEach(album => {
+    const shortName = album.replace('SUPER EUROBEAT presents ', '');
+    const pill = document.createElement('label');
+    pill.className = 'album-pill';
+    pill.innerHTML = `<input type="checkbox" data-album="${album}" checked> ${shortName}`;
+    pill.querySelector('input').addEventListener('change', (e) => toggleAlbum(album, e.target.checked));
+    albumPillsContainer.appendChild(pill);
+  });
+}
+
+function renderAlbumSongBlocks() {
+  albumListContainer.innerHTML = '';
+  ALBUMS.forEach(album => {
+    const songs = ALL_SONGS.filter(s => s.album === album);
+    const shortName = album.replace('SUPER EUROBEAT presents ', '');
+    const block = document.createElement('div');
+    block.className = 'album-block';
+    block.dataset.album = album;
+    block.innerHTML = `
+      <div class="album-block-header">
+        <div class="album-title-group">
+          <input type="checkbox" class="album-block-check" data-album="${album}" checked>
+          <span>${shortName}</span>
+        </div>
+        <span style="font-size:0.8rem; color:var(--accent-yellow);">${songs.length}曲</span>
+      </div>
+      <div class="song-list">
+        ${songs.map(song => `
+          <label class="song-item" data-id="${song.id}">
+            <input type="checkbox" value="${song.id}" checked>
+            <div class="song-item-info">
+              <div class="song-item-title">${escapeHTML(song.title)}</div>
+              <div class="song-item-artist">${escapeHTML(song.artist)}</div>
+            </div>
+          </label>
+        `).join('')}
+      </div>
+    `;
+
+    block.querySelector('.album-block-check').addEventListener('change', (e) => toggleAlbum(album, e.target.checked));
+    block.querySelectorAll('.song-item input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const id = parseInt(e.target.value);
+        if (e.target.checked) selectedSongIds.add(id);
+        else selectedSongIds.delete(id);
+        syncAlbumStates(album);
+        updateSelectionCount();
+      });
+    });
+
+    albumListContainer.appendChild(block);
+  });
+}
+
+function toggleAlbum(album, checkState) {
+  const songs = ALL_SONGS.filter(s => s.album === album);
+  songs.forEach(s => checkState ? selectedSongIds.add(s.id) : selectedSongIds.delete(s.id));
+
+  const block = document.querySelector(`.album-block[data-album="${album}"]`);
+  if (block) {
+    block.querySelector('.album-block-check').checked = checkState;
+    block.querySelectorAll('.song-item input').forEach(input => input.checked = checkState);
+  }
+  const pillCheck = document.querySelector(`.album-pill input[data-album="${album}"]`);
+  if (pillCheck) pillCheck.checked = checkState;
+
+  updateSelectionCount();
+}
+
+function syncAlbumStates(album) {
+  const songs = ALL_SONGS.filter(s => s.album === album);
+  const selectedCount = songs.filter(s => selectedSongIds.has(s.id)).length;
+  const isAll = selectedCount === songs.length;
+
+  const blockCheck = document.querySelector(`.album-block-check[data-album="${album}"]`);
+  if (blockCheck) blockCheck.checked = isAll;
+  const pillCheck = document.querySelector(`.album-pill input[data-album="${album}"]`);
+  if (pillCheck) pillCheck.checked = isAll;
+}
+
+function updateSelectionCount() {
+  selectedCountEl.textContent = selectedSongIds.size;
+  btnStartSort.disabled = selectedSongIds.size < 2;
+}
+
+// Search
+searchInput.addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.song-item').forEach(item => {
+    const id = parseInt(item.dataset.id);
+    const song = ALL_SONGS.find(s => s.id === id);
+    if (!song) return;
+    const match = song.title.toLowerCase().includes(q) || song.artist.toLowerCase().includes(q);
+    item.style.display = match ? 'flex' : 'none';
+  });
+});
+
+document.getElementById('btn-select-all').addEventListener('click', () => {
+  ALL_SONGS.forEach(s => selectedSongIds.add(s.id));
+  document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = true);
+  updateSelectionCount();
+});
+
+document.getElementById('btn-deselect-all').addEventListener('click', () => {
+  selectedSongIds.clear();
+  document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+  updateSelectionCount();
+});
+
+// --- FAST SORTING ENGINE ---
+btnStartSort.addEventListener('click', () => {
+  startNewSort();
+});
+
+function startNewSort() {
+  candidates = ALL_SONGS.filter(s => selectedSongIds.has(s.id)).map(s => ({
+    ...s,
+    wins: 0,
+    losses: 0,
+    score: 0,
+    eliminated: false
+  }));
+
+  // Shuffle initial candidates
+  candidates.sort(() => Math.random() - 0.5);
+
+  stepCount = 0;
+  historyStack = [];
+  recentPairIds = [];
+
+  const maxLosses = sortMode === 'fast' ? 1 : 2;
+  const needToEliminate = Math.max(0, candidates.length - 50);
+  estimatedTotal = Math.round((needToEliminate * maxLosses) + (50 * Math.log2(50) * 0.9));
+
+  if (candidates.length <= 50) {
+    // If 50 or fewer, skip qualifier directly to final phase
+    initFinalPhase(candidates);
+  } else {
+    phase = 'qualifier';
+    switchView(battleView);
+    nextQualifierStep();
+  }
+  saveProgress();
+}
+
+// QUALIFIER STEP: Pair songs with similar records, eliminate losers
+function nextQualifierStep() {
+  const survivors = candidates.filter(c => !c.eliminated);
+
+  // Check if qualifier is complete (down to 50 songs)
+  if (survivors.length <= 50) {
+    initFinalPhase(survivors);
+    return;
+  }
+
+  // Find a good pairing among survivors:
+  // Sort survivors by match count ascending (prioritize under-tested songs)
+  const pool = [...survivors].sort((a, b) => {
+    const aTotal = a.wins + a.losses;
+    const bTotal = b.wins + b.losses;
+    if (aTotal !== bTotal) return aTotal - bTotal;
+    return a.losses - b.losses;
+  });
+
+  // Pick song1 not recently displayed
+  let song1 = pool.find(s => !recentPairIds.includes(s.id)) || pool[0];
+  // Pick song2 with matching loss count if possible
+  let song2 = pool.find(s => s.id !== song1.id && s.losses === song1.losses && !recentPairIds.includes(s.id))
+           || pool.find(s => s.id !== song1.id && !recentPairIds.includes(s.id))
+           || pool.find(s => s.id !== song1.id);
+
+  if (!song1 || !song2) {
+    initFinalPhase(survivors);
+    return;
+  }
+
+  currentPair = [song1, song2];
+  recentPairIds = [song1.id, song2.id];
+
+  renderBattleCard(song1, song2);
+  updateBattleStats(survivors.length);
+}
+
+// FINAL PHASE: Fast Merge Sort on the 50 survivors
+function initFinalPhase(survivors) {
+  phase = 'final';
+  // Order survivors slightly by their qualifier score to make merge sort even faster
+  survivors.sort((a, b) => b.score - a.score);
+
+  currentQueue = survivors.map(s => [s]);
+  nextQueue = [];
+  activeA = null;
+  activeB = null;
+  idxA = 0;
+  idxB = 0;
+  mergedRun = [];
+
+  switchView(battleView);
+  nextFinalStep();
+}
+
+function nextFinalStep() {
+  while (!activeA || !activeB) {
+    if (currentQueue.length >= 2) {
+      activeA = currentQueue.shift();
+      activeB = currentQueue.shift();
+      idxA = 0;
+      idxB = 0;
+      mergedRun = [];
+    } else if (currentQueue.length === 1) {
+      nextQueue.push(currentQueue.shift());
+    } else {
+      if (nextQueue.length === 1) {
+        finalizeRanking(nextQueue[0]);
+        return;
+      } else if (nextQueue.length > 1) {
+        currentQueue = nextQueue;
+        nextQueue = [];
+      } else {
+        finalizeRanking(candidates);
+        return;
+      }
+    }
+  }
+
+  if (idxA >= activeA.length) {
+    while (idxB < activeB.length) mergedRun.push(activeB[idxB++]);
+    nextQueue.push(mergedRun);
+    activeA = null; activeB = null;
+    nextFinalStep();
+    return;
+  }
+
+  if (idxB >= activeB.length) {
+    while (idxA < activeA.length) mergedRun.push(activeA[idxA++]);
+    nextQueue.push(mergedRun);
+    activeA = null; activeB = null;
+    nextFinalStep();
+    return;
+  }
+
+  currentPair = [activeA[idxA], activeB[idxB]];
+  renderBattleCard(activeA[idxA], activeB[idxB]);
+  updateBattleStats(50);
+}
+
+function renderBattleCard(songA, songB) {
+  leftTitle.textContent = songA.title;
+  leftArtist.textContent = songA.artist;
+  leftAlbum.textContent = songA.album.replace('SUPER EUROBEAT presents ', '');
+
+  rightTitle.textContent = songB.title;
+  rightArtist.textContent = songB.artist;
+  rightAlbum.textContent = songB.album.replace('SUPER EUROBEAT presents ', '');
+}
+
+function updateBattleStats(survivorCount) {
+  battleStep.textContent = stepCount;
+  const pct = Math.min(99, Math.round((stepCount / estimatedTotal) * 100));
+  progressBar.style.width = `${pct}%`;
+  progressPercent.textContent = `${pct}%`;
+
+  if (phase === 'qualifier') {
+    phaseBadge.className = 'phase-badge phase-qualifier';
+    phaseBadge.textContent = sortMode === 'fast' ? '⚡ 予選フェーズ（1敗脱落）' : '🛡️ 予選フェーズ（2敗脱落）';
+    phaseDesc.textContent = `生存曲: ${survivorCount} / 50曲`;
+  } else {
+    phaseBadge.className = 'phase-badge phase-final';
+    phaseBadge.textContent = '🔥 決勝フェーズ（Top50順位決定）';
+    phaseDesc.textContent = 'ベスト50順位確定バトル中';
+  }
+}
+
+// BATTLE ACTIONS
+function handleChoice(winnerIndex) {
+  saveSnapshot();
+  stepCount++;
+
+  const [leftSong, rightSong] = currentPair;
+  const maxLosses = sortMode === 'fast' ? 1 : 2;
+
+  if (phase === 'qualifier') {
+    if (winnerIndex === 0) { // Left wins
+      leftSong.wins++;
+      leftSong.score += 2;
+      rightSong.losses++;
+      if (rightSong.losses >= maxLosses) rightSong.eliminated = true;
+    } else if (winnerIndex === 1) { // Right wins
+      rightSong.wins++;
+      rightSong.score += 2;
+      leftSong.losses++;
+      if (leftSong.losses >= maxLosses) leftSong.eliminated = true;
+    } else { // Skip / Tie
+      leftSong.score += 1;
+      rightSong.score += 1;
+    }
+    saveProgress();
+    nextQualifierStep();
+  } else {
+    // Final phase
+    if (winnerIndex === 0) {
+      leftSong.score += 2;
+      mergedRun.push(activeA[idxA++]);
+    } else if (winnerIndex === 1) {
+      rightSong.score += 2;
+      mergedRun.push(activeB[idxB++]);
+    } else {
+      leftSong.score += 1;
+      rightSong.score += 1;
+      mergedRun.push(activeA[idxA++]);
+      mergedRun.push(activeB[idxB++]);
+    }
+    saveProgress();
+    nextFinalStep();
+  }
+}
+
+function handleUndo() {
+  if (historyStack.length === 0) return;
+  const prev = historyStack.pop();
+
+  phase = prev.phase;
+  stepCount = prev.stepCount;
+  candidates = prev.candidates;
+  sortMode = prev.sortMode;
+  estimatedTotal = prev.estimatedTotal;
+  currentPair = prev.currentPair;
+  recentPairIds = prev.recentPairIds;
+
+  currentQueue = prev.currentQueue;
+  nextQueue = prev.nextQueue;
+  activeA = prev.activeA;
+  activeB = prev.activeB;
+  idxA = prev.idxA;
+  idxB = prev.idxB;
+  mergedRun = prev.mergedRun;
+
+  btnUndo.disabled = historyStack.length === 0;
+
+  if (currentPair) {
+    renderBattleCard(currentPair[0], currentPair[1]);
+    const survivors = candidates.filter(c => !c.eliminated);
+    updateBattleStats(survivors.length);
+  }
+  saveProgress();
+}
+
+function saveSnapshot() {
+  const snapshot = {
+    phase,
+    stepCount,
+    sortMode,
+    estimatedTotal,
+    currentPair,
+    recentPairIds: [...recentPairIds],
+    candidates: JSON.parse(JSON.stringify(candidates)),
+    currentQueue: JSON.parse(JSON.stringify(currentQueue)),
+    nextQueue: JSON.parse(JSON.stringify(nextQueue)),
+    activeA: activeA ? JSON.parse(JSON.stringify(activeA)) : null,
+    activeB: activeB ? JSON.parse(JSON.stringify(activeB)) : null,
+    idxA,
+    idxB,
+    mergedRun: JSON.parse(JSON.stringify(mergedRun))
+  };
+
+  historyStack.push(snapshot);
+  if (historyStack.length > 40) historyStack.shift(); // keep memory lean
+  btnUndo.disabled = false;
+}
+
+// Early Finalize
+btnFinalize.addEventListener('click', () => {
+  if (confirm('現在の対戦結果をもとに、ランキングを確定しますか？')) {
+    const sorted = [...candidates].sort((a, b) => {
+      // Prioritize survivors
+      if (a.eliminated !== b.eliminated) return a.eliminated ? 1 : -1;
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      return a.losses - b.losses;
+    });
+    finalizeRanking(sorted, true);
+  }
+});
+
+cardLeft.addEventListener('click', () => handleChoice(0));
+cardRight.addEventListener('click', () => handleChoice(1));
+btnSkip.addEventListener('click', () => handleChoice(-1));
+btnUndo.addEventListener('click', handleUndo);
+
+// Keyboard controls
+window.addEventListener('keydown', (e) => {
+  if (!battleView.classList.contains('active')) return;
+  if (e.target.tagName === 'INPUT') return;
+
+  if (e.key === 'ArrowLeft' || e.key === '1') handleChoice(0);
+  else if (e.key === 'ArrowRight' || e.key === '2') handleChoice(1);
+  else if (e.key === 'ArrowDown' || e.key === '3') handleChoice(-1);
+  else if (e.key === 'z' || e.key === 'Z' || e.key === 'Backspace') handleUndo();
+});
+
+// --- SAVE & RESUME SYSTEM ---
+function saveProgress() {
+  const state = {
+    timestamp: new Date().toISOString(),
+    sortMode,
+    phase,
+    stepCount,
+    estimatedTotal,
+    candidates,
+    currentPair,
+    recentPairIds,
+    currentQueue,
+    nextQueue,
+    activeA,
+    activeB,
+    idxA,
+    idxB,
+    mergedRun
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  saveTimeText.textContent = `保存済: ${time}`;
+}
+
+function checkSavedProgress() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return;
+  try {
+    const state = JSON.parse(saved);
+    if (state && state.candidates && state.candidates.length > 0) {
+      resumeInfo.textContent = `対戦回数: ${state.stepCount}回 / モード: ${state.sortMode === 'fast' ? '超高速' : '安定'} / 保存時刻: ${new Date(state.timestamp).toLocaleString()}`;
+      resumeBanner.style.display = 'flex';
+    }
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+document.getElementById('btn-resume').addEventListener('click', () => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return;
+  const state = JSON.parse(saved);
+
+  sortMode = state.sortMode || 'fast';
+  phase = state.phase;
+  stepCount = state.stepCount;
+  estimatedTotal = state.estimatedTotal;
+  candidates = state.candidates;
+  currentPair = state.currentPair;
+  recentPairIds = state.recentPairIds || [];
+
+  currentQueue = state.currentQueue || [];
+  nextQueue = state.nextQueue || [];
+  activeA = state.activeA;
+  activeB = state.activeB;
+  idxA = state.idxA || 0;
+  idxB = state.idxB || 0;
+  mergedRun = state.mergedRun || [];
+
+  resumeBanner.style.display = 'none';
+  switchView(battleView);
+
+  if (phase === 'qualifier') {
+    if (currentPair) {
+      renderBattleCard(currentPair[0], currentPair[1]);
+      const survivors = candidates.filter(c => !c.eliminated);
+      updateBattleStats(survivors.length);
+    } else {
+      nextQualifierStep();
+    }
+  } else {
+    if (currentPair) {
+      renderBattleCard(currentPair[0], currentPair[1]);
+      updateBattleStats(50);
+    } else {
+      nextFinalStep();
+    }
+  }
+});
+
+document.getElementById('btn-discard-save').addEventListener('click', () => {
+  if (confirm('前回のセーブデータを破棄しますか？')) {
+    localStorage.removeItem(STORAGE_KEY);
+    resumeBanner.style.display = 'none';
+    saveTimeText.textContent = '破棄済';
+  }
+});
+
+// JSON Export / Import
+document.getElementById('btn-export-json').addEventListener('click', () => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) {
+    alert('保存されている対戦データがありません。');
+    return;
+  }
+  const blob = new Blob([saved], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `euromach_progress_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('btn-import-json-trigger').addEventListener('click', () => {
+  document.getElementById('import-file-input').click();
+});
+
+document.getElementById('import-file-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const data = JSON.parse(event.target.result);
+      if (data && data.candidates) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        showToast('進捗ファイルを読み込みました！');
+        checkSavedProgress();
+      } else {
+        alert('無効な進捗ファイルです。');
+      }
+    } catch(err) {
+      alert('ファイルの読み込みに失敗しました。');
+    }
+  };
+  reader.readAsText(file);
+});
+
+// --- RESULT VIEW ---
+function finalizeRanking(sortedList, isEarly = false) {
+  phase = 'result';
+  switchView(resultView);
+  rankingBody.innerHTML = '';
+  localStorage.removeItem(STORAGE_KEY); // clear on normal complete
+
+  const best50 = sortedList.slice(0, 50);
+  resultDesc.textContent = `候補総数: ${candidates.length}曲 / 総対戦数: ${stepCount}回 ${isEarly ? '（※途中確定）' : '（※ベスト50確定！）'}`;
+
+  best50.forEach((song, idx) => {
+    const rank = idx + 1;
+    let badgeClass = 'rank-other';
+    if (rank === 1) badgeClass = 'rank-1';
+    else if (rank === 2) badgeClass = 'rank-2';
+    else if (rank === 3) badgeClass = 'rank-3';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="text-align:center;">
+        <span class="rank-badge ${badgeClass}">${rank}</span>
+      </td>
+      <td>
+        <div style="font-weight:bold; color:#fff;">${escapeHTML(song.title)}</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">${escapeHTML(song.artist)}</div>
+      </td>
+      <td>
+        <span class="card-album-tag" style="margin:0; font-size:0.7rem;">
+          ${escapeHTML(song.album.replace('SUPER EUROBEAT presents ', ''))}
+        </span>
+      </td>
+    `;
+    rankingBody.appendChild(tr);
+  });
+}
+
+// Copy Ranking as Plain Text
+btnCopyRanking.addEventListener('click', () => {
+  const rows = rankingBody.querySelectorAll('tr');
+  let text = '【EUROMACH BEST 50 RANKING】\n\n';
+  rows.forEach((row, i) => {
+    const rank = i + 1;
+    const title = row.querySelector('div:first-child').textContent.trim();
+    const artist = row.querySelector('div:nth-child(2)').textContent.trim();
+    const album = row.querySelector('.card-album-tag').textContent.trim();
+    text += `${rank}位: ${title} / ${artist} (${album})\n`;
+  });
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('ランキングをクリップボードにコピーしました！');
+  }).catch(() => {
+    alert('コピーに失敗しました。手動でコピーしてください。');
+  });
+});
+
+btnRestart.addEventListener('click', () => {
+  if (confirm('最初の候補選択画面に戻りますか？')) {
+    switchView(selectionView);
+  }
+});
+
+function switchView(target) {
+  [selectionView, battleView, resultView].forEach(v => v.classList.remove('active'));
+  target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[tag] || tag));
+}
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
